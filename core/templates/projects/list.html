@@ -1,0 +1,14 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Projetos</h2>
+<a href="/projects/create/">Novo projeto</a>
+
+<ul>
+{% for p in projects %}
+<li>{{p.name}} - <a href="/projects/{{p.id}}/delete/">Excluir</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
