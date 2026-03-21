@@ -1,4 +1,4 @@
- s
+
 SimpleTask Django
 
 Rodar:
