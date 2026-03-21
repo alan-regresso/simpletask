@@ -1,13 +1,16 @@
-
-<h1>SimpleTask</h1>
-
-{% if user.is_authenticated %}
-<a href="/dashboard/">Dashboard</a> |
-<a href="/projects/">Projetos</a> |
-<a href="/tasks/">Tarefas</a> |
-<a href="/logout/">Sair</a>
-{% endif %}
-
-<hr>
-
-{% block content %}{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciador de Tarefas</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'lista_tarefas' %}">Home</a> | 
+        <a href="{% url 'criar_tarefa' %}">Nova Tarefa</a>
+    </nav>
+    <hr>
+    {% block conteudo %}
+    {% endblock %}
+</body>
+</html>

@@ -1,20 +1,19 @@
-
 {% extends 'base.html' %}
-{% block content %}
 
-<h2>Tarefas</h2>
-<a href="/tasks/create/">Nova tarefa</a>
-
-<ul>
-{% for t in tasks %}
-<li>
-{{t.title}} - {{t.status}}
-<form method="post" action="/tasks/{{t.id}}/complete/">
-{% csrf_token %}
-<button type="submit">Concluir</button>
-</form>
-</li>
-{% endfor %}
-</ul>
-
+{% block conteudo %}
+    <h2>Minhas Tarefas</h2>
+    <ul>
+        {% for tarefa in tarefas %}
+            <li>
+                <strong>{{ tarefa.titulo }}</strong> - {{ tarefa.descricao }}
+                <a href="{% url 'editar_tarefa' tarefa.id %}">[Editar]</a>
+                <form action="{% url 'excluir_tarefa' tarefa.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Excluir</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>Nenhuma tarefa cadastrada.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

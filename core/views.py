@@ -1,59 +1,35 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from .models import Task 
+from .forms import TaskForm
 
+def lista_tarefas(request):
+    tarefas = Task.objects.all()
+    return render(request, 'tasks/list.html', {'tarefas': tarefas})
 
-def login_view(request):
+def criar_tarefa(request):
     if request.method == 'POST':
-        usuario = request.POST.get('username')
-        senha = request.POST.get('password')
-        user = authenticate(request, username=usuario, password=senha)
-        if user is not None:
-            login(request, user)
-            return redirect('dashboard')
-        else:
-            return render(request, 'registration/login.html', {'erro': True})
-    return render(request, 'registration/login.html')
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()  
+            return redirect('lista_tarefas')
+    else:
+        form = TaskForm()
+    return render(request, 'tasks/form.html', {'form': form})
 
+def editar_tarefa(request, id):
+    tarefa = get_object_or_404(Task, id=id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=tarefa)
+        if form.is_valid():
+            form.save()  
+            return redirect('lista_tarefas')
+    else:
+        form = TaskForm(instance=tarefa)
+    return render(request, 'tasks/form.html', {'form': form})
 
-@login_required
-def dashboard(request):
-    return render(request, 'tasks/dashboard.html')
-
-
-@login_required
-def task_list(request):
-    return render(request, 'tasks/task_list.html')
-
-@login_required
-def task_create(request):
-    return render(request, 'tasks/form.html')
-
-@login_required
-def task_complete(request, pk): 
-    return redirect('dashboard')
-
-@login_required
-def task_delete(request, pk):
-    return redirect('dashboard')
-
-@login_required
-def task_update_status(request, pk):
-    return redirect('dashboard')
-
-
-@login_required
-def project_list(request):
-    return render(request, 'projects/list.html')
-
-@login_required
-def project_create(request):
-    return render(request, 'projects/form.html')
-
-@login_required
-def project_update(request, pk):
-    return render(request, 'projects/form.html')
-
-@login_required
-def project_delete(request, pk):
-    return redirect('project_list')
+def excluir_tarefa(request, id):
+    tarefa = get_object_or_404(Task, id=id)
+    if request.method == 'POST':
+        tarefa.delete()  
+        return redirect('lista_tarefas')
+    return render(request, 'tasks/list.html', {'tarefa': tarefa})
